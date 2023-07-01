@@ -207,9 +207,9 @@ def process_modelscope(args_dict):
 
             args.strength = 1
 
-        samples, _, generative_sattings = pipe.infer(args.prompt, args.n_prompt, args.steps, args.frames, args.seed + batch if args.seed != -1 else -1, args.cfg_scale,
+        samples, _, generate_settings = pipe.infer(args.prompt, args.n_prompt, args.steps, args.frames, args.seed + batch if args.seed != -1 else -1, args.cfg_scale,
                                 args.width, args.height, args.eta, cpu_vae, device, latents, skip_steps=skip_steps, mask=mask)
-        print('generative_sattings', type(generative_sattings), generative_sattings)
+
         if batch > 0:
             outdir_current = os.path.join(get_outdir(), f"{init_timestring}_{batch}")
         print(f'text2video finished, saving frames to {outdir_current}')
@@ -219,8 +219,8 @@ def process_modelscope(args_dict):
         
         json_path = os.path.join(outdir_current, "settings.json")
         with open(json_path, "w") as f:
-            generative_sattings['device'] = str(generative_sattings['device'])
-            json.dump(generative_sattings, f, indent=4)
+            generate_settings['device'] = str(generate_settings['device'])
+            json.dump(generate_settings, f, indent=4)
             print('json saved : ', json_path)
     
         for i in range(len(samples)):
